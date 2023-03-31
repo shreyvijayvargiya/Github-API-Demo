@@ -16,4 +16,4 @@ export const fetchLatestIssues = async() => {
 		repo: "react",
 	});
   return data.data;
-}
+};

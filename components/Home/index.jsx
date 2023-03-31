@@ -1,8 +1,15 @@
 import React, { useState } from "react";
-import { Tabs, Tab, Box, Typography, CircularProgress } from "@mui/material";
+import {
+	Tabs,
+	Tab,
+	Box,
+	Typography,
+	CircularProgress,
+	Button,
+} from "@mui/material";
 import { fetchLatestIssues, fetchLatestPRs } from "utils/api/githubApi";
 import { DataTable } from "modules";
-import { AiFillGithub } from "react-icons/ai";
+import router from "next/router";
 
 const TabPanel = (props) => {
 	const { children, value, index, ...other } = props;
@@ -31,7 +38,7 @@ function a11yProps(index) {
 	};
 }
 
-const Home = () => {
+const HomeComponent = () => {
 	const [value, setValue] = React.useState(0);
 	const [data, setData] = useState({
 		pullrequests: [],
@@ -42,7 +49,7 @@ const Home = () => {
 		setValue(newValue);
 	};
 
-	const getPRs = async () => {
+	const getPrsIssuesLists = async () => {
 		const PRs = await fetchLatestPRs();
 		const issues = await fetchLatestIssues();
 		setData({
@@ -51,18 +58,12 @@ const Home = () => {
 		});
 	};
 
-	console.log(data);
 	React.useEffect(() => {
-		getPRs();
+		getPrsIssuesLists();
 	}, []);
 
 	return (
 		<div>
-			<div className="flex justify-start gap-1 items-center my-4">
-				<AiFillGithub size={24} />
-				<p>Facebook/react</p>
-			</div>
-			<hr />
 			<div className="p-8">
 				<Box sx={{ width: "100%" }}>
 					<Box sx={{ borderBottom: 1, borderColor: "divider" }}>
@@ -76,19 +77,40 @@ const Home = () => {
 						</Tabs>
 					</Box>
 					<TabPanel value={value} index={0}>
-						{data.pullrequestsl && data.pullrequests.length > 0 ? (
-							<CircularProgress size={18} />
+						{data.pullrequests && data.pullrequests.length > 0 ? (
+							<DataTable rows={data.pullrequests} removePagination />
 						) : (
-							<DataTable rows={data.pullrequests} />
+							<CircularProgress size={18} />
 						)}
+						<br />
+						<Button
+							color="primary"
+							variant="contained"
+							size="small"
+							onClick={() => router.push("/pullrequests")}
+						>
+							View all
+						</Button>
 					</TabPanel>
 					<TabPanel value={value} index={1}>
-						{/* <DataTable /> */}
-						Issues
+						{data.issues && data.issues.length > 0 ? (
+							<DataTable rows={data.issues} removePagination />
+						) : (
+							<CircularProgress size={18} />
+						)}
+						<br />
+						<Button
+							color="primary"
+							variant="contained"
+							size="small"
+							onClick={() => router.push("/issues")}
+						>
+							View all
+						</Button>
 					</TabPanel>
 				</Box>
 			</div>
 		</div>
 	);
 };
-export default Home;
+export default HomeComponent;

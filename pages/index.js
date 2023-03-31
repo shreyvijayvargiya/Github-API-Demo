@@ -1,5 +1,15 @@
 import React from "react";
-import { Home } from "components";
+import { HomeComponent } from "components";
+import Head from "next/head";
 
-const HomePage = () => <Home />;
+const HomePage = () => {
+	return (
+		<div>
+			<Head>
+				<title>Github API Demo</title>
+			</Head>
+			<HomeComponent />
+		</div>
+	);
+};
 export default HomePage;

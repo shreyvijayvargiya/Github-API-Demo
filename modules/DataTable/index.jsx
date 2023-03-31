@@ -6,13 +6,21 @@ import {
 	TableBody,
 	TableHead,
 	Paper,
+	IconButton,
 	TableContainer,
 	TableRow,
 	Chip,
 	Pagination,
+	Select,
+	MenuItem,
 } from "@mui/material";
 import TableCell, { tableCellClasses } from "@mui/material/TableCell";
-import { AiOutlinePullRequest } from "react-icons/ai";
+import {
+	AiOutlinePullRequest,
+	AiOutlineDownCircle,
+	AiOutlineCiCircle,
+} from "react-icons/ai";
+import { AiOutlineUpCircle } from "react-icons/ai";
 
 const StyledTableCell = styled(TableCell)(({ theme }) => ({
 	[`&.${tableCellClasses.head}`]: {
@@ -30,64 +38,118 @@ const StyledTableRow = styled(TableRow)(({ theme }) => ({
 	},
 }));
 
-const DataTable = ({ rows }) => {
+const DataTable = ({ rows, removePagination }) => {
 	const initialData = rows.slice(0, 5);
 	const [data, setData] = useState(initialData);
-
+	const [activeId, setActiveId] = useState("");
+	const [filter, setFilter] = useState(0);
 	const handlePagination = (e, pageNumber) => {
-		const updatedRows = rows?.slice(Number(pageNumber) * 5, Number(pageNumber) * 5 + 5);
+		const updatedRows = rows?.slice(
+			Number(pageNumber) * 5,
+			Number(pageNumber) * 5 + 5
+		);
 		setData(updatedRows);
+	};
+
+	const handleChange = (e) => {
+		const val = e.target.value;
+		setFilter(val);
+		if (val === 10) {
+			let filteredData = data.filter((item) => !item.draft);
+			setData(filteredData);
+		} else if (val === 20) {
+			let filteredData = data.filter((item) => (item.draft ? item : null));
+			setData(filteredData);
+		} else {
+			setData(initialData);
+		}
 	};
 
 	return (
 		<div>
+			<div className="flex justify-end items-center w-full">
+				<Select
+					labelId="status-select"
+					id="status-select"
+					value={filter}
+					label="status"
+					onChange={handleChange}
+				>
+					<MenuItem value={0}>All</MenuItem>
+					<MenuItem value={10}>Open</MenuItem>
+					<MenuItem value={20}>Draft</MenuItem>
+				</Select>
+			</div>
 			<TableContainer component={Paper}>
 				<Table sx={{ minWidth: 700 }} aria-label="customized table">
 					<TableHead>
 						<TableRow>
+							<StyledTableCell>Arrow</StyledTableCell>
 							<StyledTableCell>D/O</StyledTableCell>
 							<StyledTableCell align="left">Title</StyledTableCell>
-							<StyledTableCell align="left">Created date</StyledTableCell>
+							<StyledTableCell align="left">Created date </StyledTableCell>
 						</TableRow>
 					</TableHead>
 					<TableBody>
 						{data.map((row) => {
 							const date = new Date(row.created_at);
 							return (
-								<StyledTableRow key={row.id}>
-									<StyledTableCell>
-										<AiOutlinePullRequest
-											color={row.draft ? grey[500] : green[500]}
-										/>
-									</StyledTableCell>
-									<StyledTableCell align="left">
-										{row.title}{" "}
-										{row.labels.map((item) => (
-											<Chip
-												label={item.name}
-												key={item.id}
-												color="primary"
-												size="small"
+								<>
+									<StyledTableRow key={row.id}>
+										<StyledTableCell>
+											{activeId === row.id ? (
+												<IconButton onClick={() => setActiveId("")}>
+													<AiOutlineDownCircle size={18} />
+												</IconButton>
+											) : (
+												<IconButton onClick={() => setActiveId(row.id)}>
+													<AiOutlineUpCircle size={18} />
+												</IconButton>
+											)}
+										</StyledTableCell>
+										<StyledTableCell>
+											<AiOutlinePullRequest
+												color={row.draft ? grey[500] : green[500]}
 											/>
-										))}
-									</StyledTableCell>
-									<StyledTableCell align="left">
-										{date.getDate() +
-											"/" +
-											date.getMonth() +
-											"/" +
-											date.getFullYear()}
-									</StyledTableCell>
-									<StyledTableCell align="left"></StyledTableCell>
-								</StyledTableRow>
+										</StyledTableCell>
+										<StyledTableCell align="left">
+											{row.title}{" "}
+											{row.labels.map((item) => (
+												<Chip
+													label={item.name}
+													key={item.id}
+													color="primary"
+													size="small"
+												/>
+											))}
+										</StyledTableCell>
+										<StyledTableCell align="left">
+											{date.getDate() +
+												"/" +
+												date.getMonth() +
+												"/" +
+												date.getFullYear()}
+										</StyledTableCell>
+									</StyledTableRow>
+									{activeId === row.id && (
+										<StyledTableCell colSpan={4}>
+											<div className="w-full my-4 p-4">
+												<p className="text-semibold text-xl">Comment</p>
+												{row.body}
+											</div>
+										</StyledTableCell>
+									)}
+								</>
 							);
 						})}
 					</TableBody>
 				</Table>
 			</TableContainer>
-			<div className="flex justify-center items-center p-4">
-				<Pagination count={6} onChange={handlePagination} />
-			</div>
+			{removePagination ? null : (
+				<div className="flex justify-center items-center p-4">
+					<Pagination count={6} onChange={handlePagination} />
+				</div>
+			)}
 		</div>
 	);
 };

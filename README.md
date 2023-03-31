@@ -9,7 +9,6 @@ Clone the repository
 run yarn
 run yarn run dev
 open localhost:4001
-
 ```
 
 ## Packaged used

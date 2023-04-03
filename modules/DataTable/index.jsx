@@ -20,7 +20,7 @@ import {
 	AiOutlineDownCircle,
 } from "react-icons/ai";
 import { AiOutlineUpCircle } from "react-icons/ai";
-import LabelsListComponent from "modules/LabelsList";
+import LabelFilter from "modules/LabelFilter";
 
 const StyledTableCell = styled(TableCell)(({ theme }) => ({
 	[`&.${tableCellClasses.head}`]: {
@@ -61,7 +61,7 @@ const DataTable = ({ rows, removePagination, showLabelFilter }) => {
 	return (
 		<div>
 			<div className="flex justify-end items-center w-full gap-4 p-4">
-				{showLabelFilter && <LabelsListComponent  data={data} setData={setData} />}
+				{showLabelFilter && <LabelFilter data={data} setData={setData} />}
 				<Select
 					labelId="status-select"
 					id="status-select"

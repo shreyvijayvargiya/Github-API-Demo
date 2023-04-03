@@ -1,5 +1,5 @@
 import React from "react";
-import { Navbar, Footer } from "modules";
+import { Navbar } from "modules";
 
 const Body = ({ children }) => {
 	return (

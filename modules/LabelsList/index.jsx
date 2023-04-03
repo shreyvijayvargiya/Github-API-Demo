@@ -2,7 +2,7 @@ import React, { useEffect, useState } from "react";
 import { getRepoLabels } from "utils/api/githubApi";
 import { Select, FormControl, InputLabel, MenuItem } from "@mui/material";
 
-const LabelsListComponent = ({ data, setData }) => {
+const LabelFilter = ({ data, setData }) => {
 	const [labels, setLabels] = useState([]);
 	const [labelFilter, setLabelFilter] = React.useState([]);
 
@@ -54,4 +54,4 @@ const LabelsListComponent = ({ data, setData }) => {
 		</div>
 	);
 };
-export default LabelsListComponent;
+export default LabelFilter;

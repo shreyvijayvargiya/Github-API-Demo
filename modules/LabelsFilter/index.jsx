@@ -2,7 +2,7 @@ import React, { useEffect, useState } from "react";
 import { getRepoLabels } from "utils/api/githubApi";
 import { Select, FormControl, InputLabel, MenuItem } from "@mui/material";
 
-const LabelFilter = ({ data, setData }) => {
+const LabelsFilter = ({ data, setData }) => {
 	const [labels, setLabels] = useState([]);
 	const [labelFilter, setLabelFilter] = React.useState([]);
 
@@ -20,18 +20,17 @@ const LabelFilter = ({ data, setData }) => {
 			target: { value },
 		} = event;
 		setLabelFilter(value);
-	  // set the data filtered by the value
 		let filteredData = [];
-		data.forEach(row => {
-			row.labels.forEach(label => {
-				if(label.name === value){
-					filteredData.push(row)
-				}else {
-					return null
+		data.forEach((row) => {
+			row.labels.forEach((label) => {
+				if (label.name === value) {
+					filteredData.push(row);
+				} else {
+					return null;
 				}
-			})
+			});
 		});
-		setData(filteredData)
+		setData(filteredData);
 	};
 	return (
 		<div>
@@ -54,4 +53,4 @@ const LabelFilter = ({ data, setData }) => {
 		</div>
 	);
 };
-export default LabelFilter;
+export default LabelsFilter;

@@ -26,7 +26,7 @@ const IssuesComponent = () => {
 			<div className="p-8">
 				<Box sx={{ width: "100%" }}>
 					{data && data.length > 0 ? (
-						<DataTable rows={data} />
+						<DataTable rows={data} showLabelFilter />
 					) : (
 						<CircularProgress size={18} />
 					)}

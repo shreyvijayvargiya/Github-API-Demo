@@ -17,3 +17,19 @@ export const fetchLatestIssues = async() => {
 	});
   return data.data;
 };
+
+export const getRepoLabels = async() => {
+	const labels = await octokit.issues.listLabelsForRepo({
+		owner: "facebook",
+		repo: "react",
+	});
+	return labels.data;
+}
+export const getLabel = async(name) => {
+	const repos = await octokit.issues.getLabel({
+		owner: "facebook",
+		repo: "react",
+		name: name
+	});
+	return repos.data;
+}
